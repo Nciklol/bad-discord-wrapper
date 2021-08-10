@@ -1,23 +1,12 @@
-import { APIGuild, APIMessage, APIUser, Snowflake } from "discord-api-types";
+import { APIMessage, APIUser, Snowflake } from "discord-api-types";
 import { EventEmitter } from "stream";
 import WebSocket from "ws";
-import { sendMessage } from "../api";
 import Message from "./Message"
 import Channel from "./Channel"
 import Guild from "./Guild"
 import Collection from "@discordjs/collection";
 import User from "./User";
 import GuildMember from "./GuildMember";
-
-declare module "discord-api-types" {
-    interface APIChannel {
-        send(content: string);
-    }
-
-    interface APIMessage {
-        channel: APIChannel
-    }
-}
 
 export default class Client extends EventEmitter {
     private _intents: number;
