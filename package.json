@@ -1,0 +1,26 @@
+{
+  "name": "bad-discord-wrapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "cd ./src && tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@discordjs/collection": "^0.2.1",
+    "discord-api-types": "^0.22.0",
+    "dotenv": "^10.0.0",
+    "node-fetch": "^2.6.1",
+    "ws": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.13",
+    "@types/node-fetch": "^2.5.12",
+    "@types/ws": "^7.4.7",
+    "typescript": "^4.3.5"
+  }
+}
