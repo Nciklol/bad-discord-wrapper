@@ -24,7 +24,7 @@ export default class Client extends EventEmitter {
     public login(token?: string) {
         this._token = token || process.env.DISCORD_TOKEN;
 
-        if (!token) throw new Error("Invalid token");
+        if (!this._token) throw new Error("Invalid token");
         if (!Number(this._intents)) throw new Error("Invalid intents")
 
         this._initWS(this._token, this._intents);
