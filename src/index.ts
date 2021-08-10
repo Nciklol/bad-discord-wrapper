@@ -18,4 +18,4 @@ client.on("message", (message: Message) => {
 
 client.on("debug", console.log);
 
-client.login("Njk5ODUxMTkyNjY2NDIzMzI2.XpaZNg.TUbitsWZMZF5IUcBacmgB9QWT68") // Uses process.env.DISCORD_TOKEN if no token is provided.
+client.login() // Uses process.env.DISCORD_TOKEN if no token is provided.
