@@ -13,7 +13,7 @@ export default class Client extends EventEmitter {
     private _token: string;
 
     public user?: User = null;
-    public guilds? = new Map<Snowflake, Guild>();
+    public guilds? = new Collection<Snowflake, Guild>();
 
 
     constructor(intents: number) {
