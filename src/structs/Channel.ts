@@ -1,22 +1,19 @@
-import { Snowflake, APIGuild} from "discord-api-types";
+import { Snowflake} from "discord-api-types";
 import handler from "../api";
 import { MessageOptions } from "../typings";
+import Utils from "../utils/Utils";
+import Base from "./Base";
 import Guild from "./Guild";
-import GuildMember from "./GuildMember";
-import Message from "./Message";
 import MessageEmbed from "./MessageEmbed";
-import User from "./User";
 
-export default class Channel {
+export default class Channel extends Base{
 
-    constructor(public id: Snowflake, public guild: Guild, public name: string, private _token: string) {};
+    constructor(public id: Snowflake, public guild: Guild, public name: string, _token: string) {super(_token)};
 
     public async send(content: string | MessageEmbed | MessageOptions) {
         const msg = await handler.sendMessage(this.id, content, this._token);
         if (!msg) return null;
         
-        const user = new User(msg.author.id, msg.author.username, msg.author.discriminator, msg.author.avatar || null, msg.author.bot || false);
-        return new Message(msg.id, this.guild, this, msg.content, user, msg.member ? new GuildMember(msg.author.id, msg.member.nick || null, msg.author) : null);
-    
+        return Utils.convertAPIMessage(msg, this);
     }
 }
