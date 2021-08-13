@@ -43,6 +43,8 @@ export default class Client extends EventEmitter {
         let readyGuilds = [];
         let ready = false;
 
+        let lastHeartbeat;
+
         ws.on('message', async (message) => {
 
             const res = JSON.parse(message.toString()); // Get the response in a json object
@@ -119,6 +121,7 @@ export default class Client extends EventEmitter {
                 this.emit("debug", "WS | Identified with discord.");
 
                 setInterval(() => { // Set the interval to respond to the heartbeat discord sent on an interval for the time they specify https://discord.com/developers/docs/topics/gateway#heartbeating
+                    lastHeartbeat = Date.now();
                     this.emit("debug", "WS | Sent heartbeat")
                     ws.send(JSON.stringify({
                         "op": 1,
@@ -149,6 +152,8 @@ export default class Client extends EventEmitter {
                     this.emit("debug", "WS | Re-Identified with discord.");
                 }, time * 1000);
             }
+
+            if (res.op == "11") this.emit("debug", `WS | Heartbeat acknowledged in ${Date.now() - lastHeartbeat}ms`);
         });
     }
 }
