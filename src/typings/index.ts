@@ -1,8 +1,11 @@
 import MessageEmbed from "../structs/MessageEmbed";
 import { APIEmbed } from "discord-api-types";
-import Client from "../structs/Client";
 
-export {Client}
+export interface ImageURLOptions {
+    format?: "webp" | "png" | "jpg" | "jpeg";
+    size?: 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
+    dynamic?: boolean;
+}
 
 export interface MessageOptions {
     content?: string;

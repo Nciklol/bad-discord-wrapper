@@ -1,4 +1,5 @@
 import { Snowflake } from "discord-api-types";
+import { ImageURLOptions } from "../typings";
 
 export default class User {
     public tag: string;
@@ -12,8 +13,10 @@ export default class User {
         this.avatar = this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.png` : null;
     }
 
-    public displayAvatarURL() {
-        return this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.png` : `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.png`
+    public displayAvatarURL({dynamic, size, format}: ImageURLOptions = {}) {
+        if (dynamic && this._avatarHash?.startsWith("a_")) format = "gif" as any; 
+        return this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.${format || "webp"}${size ? `?size=${size}` : ""}` 
+            : `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.${format || "webp"}`
     }
 
 }

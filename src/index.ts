@@ -15,7 +15,7 @@ client.on("message", async (message: Message) => {
     if (message.content.toLowerCase() === "!ping") {
         message.react("🏓")
         const embed = new MessageEmbed().setDescription("Pong").setColor("BLURPLE")
-            .setTimestamp().setURL("https://example.com").setFooter("test", message.author.displayAvatarURL());
+            .setTimestamp().setURL("https://example.com").setFooter("test", message.author.displayAvatarURL({dynamic: true}));
         const msg = await message.channel.send({content: `Responding...`, embeds: [embed]})
         await msg.edit(`Took ${msg.createdTimestamp - message.createdTimestamp}ms`)
     }
