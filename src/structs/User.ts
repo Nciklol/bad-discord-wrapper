@@ -16,7 +16,7 @@ export default class User {
     public displayAvatarURL({dynamic, size, format}: ImageURLOptions = {}) {
         if (dynamic && this._avatarHash?.startsWith("a_")) format = "gif" as any; 
         return this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.${format || "webp"}${size ? `?size=${size}` : ""}` 
-            : `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.${format || "webp"}`
+            : `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.${format || "webp"}${size ? `?size=${size}` : ""}`
     }
 
 }
