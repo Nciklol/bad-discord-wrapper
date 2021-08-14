@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "types": "index.d.ts",
+  "types": "./typings",
   "dependencies": {
     "@discordjs/collection": "^0.2.1",
     "discord-api-types": "^0.22.0",
@@ -22,5 +22,5 @@
     "@types/node-fetch": "^2.5.12",
     "@types/ws": "^7.4.7",
     "typescript": "^4.3.5"
-  }
+  } 
 }

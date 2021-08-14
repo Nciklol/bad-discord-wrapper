@@ -14,6 +14,6 @@ export default class Channel extends Base{
         const msg = await handler.sendMessage(this.id, content, this._token);
         if (!msg) return null;
         
-        return Utils.convertAPIMessage(msg, this);
+        return Utils.convertAPIMessage(msg, this, this._token);
     }
 }

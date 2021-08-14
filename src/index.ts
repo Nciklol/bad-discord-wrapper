@@ -12,11 +12,12 @@ client.on("ready", () => {
 
 client.on("message", async (message: Message) => {
     if (message.author.bot) return console.log("This user is a bot! Wow!");
-    if (message.content.toLowerCase() === "!what") {
-        const embed = new MessageEmbed().setDescription("test").setTitle("test").setColor("BLURPLE")
+    if (message.content.toLowerCase() === "!ping") {
+        message.react("🏓")
+        const embed = new MessageEmbed().setDescription("Pong").setColor("BLURPLE")
             .setTimestamp().setURL("https://example.com").setFooter("test", message.author.displayAvatarURL());
-
-        const msg = await message.channel.send({content: "test", embeds: [embed]})
+        const msg = await message.channel.send({content: `Responding...`, embeds: [embed]})
+        await msg.edit(`Took ${msg.createdTimestamp - message.createdTimestamp}ms`)
     }
 })
 

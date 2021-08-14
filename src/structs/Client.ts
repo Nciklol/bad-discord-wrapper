@@ -54,6 +54,7 @@ export default class Client extends EventEmitter {
             if (res["op"] == 0) {
                 seq = res.s;
                 this.emit("debug", `WS | Recieved ${res.t} event. Event #${seq}`)
+                this.emit("raw", res);
 
                 if (res.t == "READY") {
                     const apiUser: APIUser = res.d.user;
@@ -68,7 +69,7 @@ export default class Client extends EventEmitter {
                 if (res.t == "GUILD_CREATE") {
                     const g: APIGuild = res.d;
 
-                    this.guilds.set(g.id, new Guild(g.id, g.channels, g.name, this._token));
+                    this.guilds.set(g.id, new Guild(g.id, g.channels, g.roles, g.name, g.member_count, this._token));
                     if (!ready) {
                         if (readyGuilds.includes(g.id)) {
                             readyGuilds = readyGuilds.filter(x => x !== g.id);
@@ -86,7 +87,7 @@ export default class Client extends EventEmitter {
                 if (res["t"] == "MESSAGE_CREATE") {
                     const apiMsg: APIMessage = res['d'];
                     const channel = this.guilds.get(apiMsg.guild_id).channels.get(apiMsg.channel_id);
-                    const message = Utils.convertAPIMessage(apiMsg, channel);
+                    const message = Utils.convertAPIMessage(apiMsg, channel, this._token);
 
                     this.emit("message", message);
                 }

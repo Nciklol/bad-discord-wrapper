@@ -1,5 +1,8 @@
 import MessageEmbed from "../structs/MessageEmbed";
 import { APIEmbed } from "discord-api-types";
+import Client from "../structs/Client";
+
+export {Client}
 
 export interface MessageOptions {
     content?: string;
