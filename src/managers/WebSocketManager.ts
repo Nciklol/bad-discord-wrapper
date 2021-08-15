@@ -44,7 +44,7 @@ export default class WebSocketManager {
             if (res.t == "GUILD_CREATE") {
                 const g: APIGuild = res.d;
 
-                this.client.guilds.set(g.id, new Guild(g.id, g.channels, g.roles, g.name, g.member_count, this.token));
+                this.client.guilds.set(g.id, new Guild(g.id, g.channels, g.roles, g.name, g.member_count, this.client));
                 if (!this._ready) {
                     if (this.readyGuilds.includes(g.id)) {
                         this.readyGuilds = this.readyGuilds.filter((x) => x !== g.id);
@@ -57,10 +57,10 @@ export default class WebSocketManager {
                 }
             }
 
-            if (res["t"] == "MESSAGE_CREATE") {
-                const apiMsg: APIMessage = res['d'];
+            if (res.t == "MESSAGE_CREATE") {
+                const apiMsg: APIMessage = res.d;
                 const channel = this.client.guilds.get(apiMsg.guild_id).channels.get(apiMsg.channel_id);
-                const message = Utils.convertAPIMessage(apiMsg, channel, this.token);
+                const message = Utils.convertAPIMessage(apiMsg, channel, this.client);
 
                 this.client.emit("message", message);
             }
@@ -85,15 +85,15 @@ export default class WebSocketManager {
             this.client.emit("debug", `WS | Sending a heartbeat every ${res.d.heartbeat_interval}ms.`);
             setInterval(() => { // Set the interval to respond to the heartbeat discord sent on an interval for the time they specify https://discord.com/developers/docs/topics/gateway#heartbeating
                 this.lastHeartbeat = Date.now();
-                this.client.emit("debug", "WS | Sent heartbeat");
                 this.ws.send(JSON.stringify({
                     "op": 1,
                     "d": 251
                 }));
-            }, res["d"]["heartbeat_interval"]);
+                this.client.emit("debug", "WS | Sent heartbeat");
+            }, res.d.heartbeat_interval);
         }
 
-        if (res["op"] == 9) {
+        if (res.op == 9) {
             const time = Math.floor(Math.random() * 5) + 1;
             this.client.emit("debug", `WS | Invalid session. Reconnecting in ${time} seconds.`);
             setTimeout(() => {

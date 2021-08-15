@@ -8,6 +8,7 @@ import Guild from "./Guild";
 import GuildMember from "./GuildMember";
 import MessageEmbed from "./MessageEmbed";
 import User from "./User";
+import Client from "./Client";
 
 export default class Message extends Base {
     public createdTimestamp: number;
@@ -16,8 +17,8 @@ export default class Message extends Base {
     public editedAt: Date | null = null;
 
     constructor(public id: Snowflake, public guild: Guild, public channel: Channel, public content: string, public author: User, 
-        public member: GuildMember, timestamp: string, eTimestamp: string | null, token: string) {
-        super(token);
+        public member: GuildMember, timestamp: string, eTimestamp: string | null, client: Client) {
+        super(client);
         this.createdAt = new Date(timestamp);
         this.createdTimestamp = new Date(timestamp).getTime();
 
@@ -29,13 +30,13 @@ export default class Message extends Base {
 
 
     public async react(emoji: string): Promise<void> {
-        await APIRequestHandler.sendReaction(this.channel.id, this.id, emoji, this._token);
+        await APIRequestHandler.sendReaction(this.channel.id, this.id, emoji, this.client.ws.token);
     }
 
     public async edit(content: string | MessageEmbed | MessageOptions): Promise<Message> {
-        const message = await APIRequestHandler.editMessage(this.channel.id, this.id, content, this._token);
+        const message = await APIRequestHandler.editMessage(this.channel.id, this.id, content, this.client.ws.token);
         
         if (!message) return null;
-        return Utils.convertAPIMessage(message, this.channel, this._token);
+        return Utils.convertAPIMessage(message, this.channel, this.client);
     }
 }

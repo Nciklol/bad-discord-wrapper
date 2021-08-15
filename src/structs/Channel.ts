@@ -6,16 +6,17 @@ import Base from "./Base";
 import Guild from "./Guild";
 import Message from "./Message";
 import MessageEmbed from "./MessageEmbed";
+import Client from "./Client";
 
 export default class Channel extends Base {
-    constructor(public id: Snowflake, public guild: Guild, public name: string, _token: string) {
-        super(_token);
+    constructor(public id: Snowflake, public guild: Guild, public name: string, client: Client ) {
+        super(client);
     }
 
     public async send(content: string | MessageEmbed | MessageOptions): Promise<Message> {
-        const msg = await handler.sendMessage(this.id, content, this._token);
+        const msg = await handler.sendMessage(this.id, content, this.client.ws.token);
         if (!msg) return null;
         
-        return Utils.convertAPIMessage(msg, this, this._token);
+        return Utils.convertAPIMessage(msg, this, this.client);
     }
 }

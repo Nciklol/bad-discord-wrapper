@@ -10,6 +10,7 @@ export default class Client extends EventEmitter {
 
     public user?: User = null;
     public guilds? = new Collection<Snowflake, Guild>();
+    public ws: WebSocketManager = null;
 
 
     constructor(intents: number) {
@@ -23,6 +24,6 @@ export default class Client extends EventEmitter {
         if (!access) throw new Error("Invalid token");
         if (!Number(this._intents)) throw new Error("Invalid intents");
 
-        new WebSocketManager(this, access, this._intents);
+        this.ws = new WebSocketManager(this, access, this._intents);
     }
 }

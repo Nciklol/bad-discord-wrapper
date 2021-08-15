@@ -7,6 +7,7 @@ import Guild from "../structs/Guild";
 import Channel from "../structs/Channel";
 import User from "../structs/User";
 import GuildMember from "../structs/GuildMember";
+import Client from "../structs/Client";
 
 export default class Utils extends null {
     public static async request(endpoint: string, method: string, { body, headers }: { body?: BodyInit, headers: HeadersInit }): Promise<Response> {
@@ -38,7 +39,7 @@ export default class Utils extends null {
     public static convertAPIMessage(
         message: APIMessage,
         channel: Channel,
-        token: string
+        client: Client
     ): Message {
         return new Message(
             message.id,
@@ -49,7 +50,7 @@ export default class Utils extends null {
             this.convertAPIMember(message.author, message.member, channel.guild),
             message.timestamp,
             message.edited_timestamp,
-            token
+            client
         );
     }
 

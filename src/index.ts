@@ -12,6 +12,7 @@ client.on("ready", () => {
 
 client.on("message", async (message: Message) => {
     if (message.author.bot) return console.log("This user is a bot! Wow!");
+    console.log(message.channel);
     if (message.content.toLowerCase() === "!ping") {
         message.react("🏓");
 
@@ -19,6 +20,7 @@ client.on("message", async (message: Message) => {
             .setTimestamp().setURL("https://example.com").setFooter("test", message.author.displayAvatarURL({dynamic: true}));
 
         const msg = await message.channel.send({content: `Responding...`, embeds: [embed]});
+
         await msg.edit(`Took ${msg.createdTimestamp - message.createdTimestamp}ms`);
     }
 });

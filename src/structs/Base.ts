@@ -1,3 +1,8 @@
+import Client from "./Client";
+
 export default class Base {
-    constructor(protected _token: string) {}
+    client: Client
+    constructor(client: Client) {
+        Object.defineProperty(this, 'client', { value: client });
+    }
 }
