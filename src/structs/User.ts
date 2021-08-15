@@ -7,7 +7,7 @@ export default class User {
     public avatar: string | null;
 
     constructor(public id: Snowflake, public username: string, public discriminator: string, private _avatarHash: string, bot: boolean) {
-        this.tag = `${username}${this.discriminator}`;
+        this.tag = `${username}#${this.discriminator}`;
         if (!bot) this.bot = false;
         else this.bot = true;
         this.avatar = this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.png` : null;
