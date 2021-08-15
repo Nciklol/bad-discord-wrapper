@@ -1,7 +1,7 @@
 import { APIMessage, APIUser, Snowflake, APIGuild } from "discord-api-types";
 import { EventEmitter } from "stream";
 import WebSocket from "ws";
-import Guild from "./Guild"
+import Guild from "./Guild";
 import Collection from "@discordjs/collection";
 import User from "./User";
 import Utils from "../utils/Utils";
@@ -19,11 +19,11 @@ export default class Client extends EventEmitter {
         this._intents = intents;
     }
 
-    public login(token?: string) {
+    public login(token?: string): void {
         this._token = token || process.env.DISCORD_TOKEN;
 
         if (!this._token) throw new Error("Invalid token");
-        if (!Number(this._intents)) throw new Error("Invalid intents")
+        if (!Number(this._intents)) throw new Error("Invalid intents");
 
         this._initWS(this._token, this._intents);
     }
@@ -31,12 +31,11 @@ export default class Client extends EventEmitter {
     private async _initWS(token, intents) {
         const ws = new WebSocket("wss://gateway.discord.gg/?v=9&encoding=json");
 
-        let sessionID;
         let seq;
 
         ws.on("open", () => {
-            this.emit("debug", "WS | Opened connection to discord")
-        })
+            this.emit("debug", "WS | Opened connection to discord");
+        });
 
         let readyGuilds = [];
         let ready = false;
@@ -44,7 +43,6 @@ export default class Client extends EventEmitter {
         let lastHeartbeat;
 
         ws.on('message', async (message) => {
-
             const res = JSON.parse(message.toString()); // Get the response in a json object
 
             // opcodes: https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes
@@ -53,7 +51,7 @@ export default class Client extends EventEmitter {
         
             if (res["op"] == 0) {
                 seq = res.s;
-                this.emit("debug", `WS | Recieved ${res.t} event. Event #${seq}`)
+                this.emit("debug", `WS | Recieved ${res.t} event. Event #${seq}`);
                 this.emit("raw", res);
 
                 if (res.t == "READY") {
@@ -61,9 +59,8 @@ export default class Client extends EventEmitter {
                     const user = Utils.convertAPIUser(apiUser);
                     this.user = user;
                     
-                    readyGuilds = res.d.guilds.map(g => g.id);
-                    this.emit("debug", `WS | Got ${readyGuilds.length} guilds from discord.`)
-                    sessionID = res.d.session_id;
+                    readyGuilds = res.d.guilds.map((g) => g.id);
+                    this.emit("debug", `WS | Got ${readyGuilds.length} guilds from discord.`);
                 }
 
                 if (res.t == "GUILD_CREATE") {
@@ -72,16 +69,14 @@ export default class Client extends EventEmitter {
                     this.guilds.set(g.id, new Guild(g.id, g.channels, g.roles, g.name, g.member_count, this._token));
                     if (!ready) {
                         if (readyGuilds.includes(g.id)) {
-                            readyGuilds = readyGuilds.filter(x => x !== g.id);
+                            readyGuilds = readyGuilds.filter((x) => x !== g.id);
                             if (readyGuilds.length == 0) {
                                 ready = true;
-                                this.emit("debug", "WS | All guilds loaded. Emitting ready event.")
+                                this.emit("debug", "WS | All guilds loaded. Emitting ready event.");
                                 this.emit("ready");
                             }
-                            
                         }
                     }
-                    
                 }
 
                 if (res["t"] == "MESSAGE_CREATE") {
@@ -95,52 +90,50 @@ export default class Client extends EventEmitter {
             
         
             if (res["op"] && res["op"] == 10) { 
-        
-                const indetify_data = { // Identify payload (https://discord.com/developers/docs/topics/gateway#identify-identify-structure)
+                const indetifyData = { // Identify payload (https://discord.com/developers/docs/topics/gateway#identify-identify-structure)
                     "op": 2, 
                     "d": {
-                      "token": token,
-                      "intents": intents,
-                      "properties": {
-                        "$os": "linux",
-                        "$browser": "my_library",
-                        "$device": "my_library"
-                      }
+                        "token": token,
+                        "intents": intents,
+                        "properties": {
+                            "$os": "linux",
+                            "$browser": "my_library",
+                            "$device": "my_library"
+                        }
                     }
-                  }
+                };
             
-                ws.send(JSON.stringify(indetify_data)); // Identify after the first heartbeat https://discord.com/developers/docs/topics/gateway#identifying
+                ws.send(JSON.stringify(indetifyData)); // Identify after the first heartbeat https://discord.com/developers/docs/topics/gateway#identifying
                 this.emit("debug", "WS | Identified with discord.");
 
                 setInterval(() => { // Set the interval to respond to the heartbeat discord sent on an interval for the time they specify https://discord.com/developers/docs/topics/gateway#heartbeating
                     lastHeartbeat = Date.now();
-                    this.emit("debug", "WS | Sent heartbeat")
+                    this.emit("debug", "WS | Sent heartbeat");
                     ws.send(JSON.stringify({
                         "op": 1,
                         "d": 251
-                    }))
-                    
-                }, res["d"]["heartbeat_interval"])
+                    }));
+                }, res["d"]["heartbeat_interval"]);
             }
 
             if (res["op"] == 9) {
                 const time = Math.floor(Math.random() * 5) + 1;
-                this.emit("debug", `WS | Invalid session. Reconnecting in ${time} seconds.`)
+                this.emit("debug", `WS | Invalid session. Reconnecting in ${time} seconds.`);
                 setTimeout(() => {
-                    const indetify_data = {
+                    const indetifyData = { // Identify payload (https://discord.com/developers/docs/topics/gateway#identify-identify-structure)
                         "op": 2, 
                         "d": {
-                          "token": token,
-                          "intents": intents,
-                          "properties": {
-                            "$os": "linux",
-                            "$browser": "my_library",
-                            "$device": "my_library"
-                          }
+                            "token": token,
+                            "intents": intents,
+                            "properties": {
+                                "$os": "linux",
+                                "$browser": "my_library",
+                                "$device": "my_library"
+                            }
                         }
-                      }
+                    };
                 
-                    ws.send(JSON.stringify(indetify_data));
+                    ws.send(JSON.stringify(indetifyData));
                     this.emit("debug", "WS | Re-Identified with discord.");
                 }, time * 1000);
             }

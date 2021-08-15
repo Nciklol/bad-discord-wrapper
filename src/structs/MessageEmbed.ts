@@ -10,35 +10,35 @@ export default class MessageEmbed {
         }
     }
 
-    public setTitle(title: string) {
+    public setTitle(title: string): MessageEmbed {
         this._json["title"] = title;
         return this;
     }
 
-    public setDescription(description: string) {
+    public setDescription(description: string): MessageEmbed {
         this._json["description"] = description;
         return this;
     }
 
-    public setColor(color: ColorResolvable) {
+    public setColor(color: ColorResolvable): MessageEmbed {
         this._json['color'] = Colors[color];
         return this;
     }
 
-    public setTimestamp(timestamp?: Date) {
+    public setTimestamp(timestamp?: Date): MessageEmbed {
         if (timestamp) this._json['timestamp'] = timestamp.toISOString();
         else this._json['timestamp'] = new Date().toISOString();
 
         return this;
     }
 
-    public setURL(url: string) {
+    public setURL(url: string): MessageEmbed {
         this._json['url'] = url;
 
         return this;
     }
 
-    public setFooter(text: string, iconURL?: string, proxyIconURL?: string) {
+    public setFooter(text: string, iconURL?: string, proxyIconURL?: string): MessageEmbed {
         const footer = {text};
         if (iconURL) footer['icon_url'] = iconURL;
         if (proxyIconURL) footer['proxy_icon_url'] = proxyIconURL;
@@ -46,31 +46,30 @@ export default class MessageEmbed {
         return this;
     }
 
-    get toJson() {
+    get toJson(): APIEmbed {
         return this._json;
     }
 
-    get title() {
+    get title(): string {
         return this._json["title"] || null;
     }
 
-    get description() {
+    get description(): string {
         return this._json['description'] || null;
     }
 
-    get color() {
+    get color(): string {
         return this._json['color'] || null;
     }
 
-    get timestamp() {
+    get timestamp(): string {
         return this._json['timestamp'] || null;
     }
 
-    get url() {
+    get url(): string {
         return this._json['url'] || null;
     }
 }
-
 
 
 const Colors = {

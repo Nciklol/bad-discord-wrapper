@@ -8,19 +8,21 @@ const client = new Client(515);
 
 client.on("ready", () => {
     console.log(client.user.tag);
-})
+});
 
 client.on("message", async (message: Message) => {
     if (message.author.bot) return console.log("This user is a bot! Wow!");
     if (message.content.toLowerCase() === "!ping") {
-        message.react("🏓")
+        message.react("🏓");
+
         const embed = new MessageEmbed().setDescription("Pong").setColor("BLURPLE")
             .setTimestamp().setURL("https://example.com").setFooter("test", message.author.displayAvatarURL({dynamic: true}));
-        const msg = await message.channel.send({content: `Responding...`, embeds: [embed]})
-        await msg.edit(`Took ${msg.createdTimestamp - message.createdTimestamp}ms`)
+
+        const msg = await message.channel.send({content: `Responding...`, embeds: [embed]});
+        await msg.edit(`Took ${msg.createdTimestamp - message.createdTimestamp}ms`);
     }
-})
+});
 
 client.on("debug", console.log);
 
-client.login() // Uses process.env.DISCORD_TOKEN if no token is provided.
+client.login(); // Uses process.env.DISCORD_TOKEN if no token is provided.

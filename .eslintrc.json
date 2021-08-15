@@ -1,0 +1,28 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "google"
+    ],
+    "rules": {
+      "object-curly-spacing": "off",
+      "quotes": "off",
+      "linebreak-style": "off",
+      // This will be turned on in the future when I get around to it.
+      "require-jsdoc": "off",
+      "indent": ["error", 4],
+      "max-len": "off",
+      "eol-last": ["error", "never"],
+      "no-trailing-spaces": "off",
+      "no-unused-vars": "warn",
+      "comma-dangle": "off",
+      "arrow-parens": "warn"
+    }
+    
+  }

@@ -7,16 +7,17 @@ export default class User {
     public avatar: string | null;
 
     constructor(public id: Snowflake, public username: string, public discriminator: string, private _avatarHash: string, bot: boolean) {
-        this.tag = `${username}${this.discriminator}`
+        this.tag = `${username}${this.discriminator}`;
         if (!bot) this.bot = false;
-        else this.bot = true
+        else this.bot = true;
         this.avatar = this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.png` : null;
     }
 
-    public displayAvatarURL({dynamic, size, format}: ImageURLOptions = {}) {
-        if (dynamic && this._avatarHash?.startsWith("a_")) format = "gif" as any; 
-        return this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.${format || "webp"}${size ? `?size=${size}` : ""}` 
-            : `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.${format || "webp"}${size ? `?size=${size}` : ""}`
-    }
+    public displayAvatarURL({dynamic, size, format}: ImageURLOptions = {}): string {
+        let type: string = format;
 
+        if (dynamic && this._avatarHash?.startsWith("a_")) type = "gif"; 
+        return this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.${type || "webp"}${size ? `?size=${size}` : ""}` : 
+            `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.${type || "webp"}${size ? `?size=${size}` : ""}`;
+    }
 }

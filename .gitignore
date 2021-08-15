@@ -2,3 +2,5 @@ node_modules
 dist
 .env
 .gitignore
+pnpm-lock.yaml
+package-lock.json

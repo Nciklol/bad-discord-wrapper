@@ -1,4 +1,4 @@
-import { Snowflake, APIUser, APIRole } from "discord-api-types";
+import { Snowflake } from "discord-api-types";
 import Collection from "@discordjs/collection";
 import User from "./User";
 import Guild from "./Guild";
@@ -11,20 +11,20 @@ export default class GuildMember {
     public permissions: string;
 
     constructor(public user: User, public nick: string | null, roles: string[], public guild: Guild) {
-        roles.forEach(id => {
+        roles.forEach((id) => {
             const role = guild.roles.get(id);
             if (!id) {
-                console.log(`Could not find role ${role}`)
+                console.log(`Could not find role ${role}`);
             } else {
                 this.roles.set(role.id, role);
             }
-        })
+        });
         this.id = user.id;
         this.displayName = nick || user.username;
         
         let permissions: number;
 
-        for (const permission of this.roles.map(role => role.permissions)) {
+        for (const permission of this.roles.map((role) => role.permissions)) {
             permissions += Number(permission);
         }
 

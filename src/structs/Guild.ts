@@ -1,10 +1,8 @@
-import { Snowflake, APIChannel, APIRole, APIGuildMember } from "discord-api-types"
+import { Snowflake, APIChannel, APIRole } from "discord-api-types";
 import Channel from "./Channel";
 import Collection from "@discordjs/collection";
 import Base from "./Base";
 import Role from "./Role";
-import GuildMember from "./GuildMember";
-import Utils from "../utils/Utils";
 
 export default class Guild extends Base {
     public channels = new Collection<Snowflake, Channel>();
@@ -12,12 +10,12 @@ export default class Guild extends Base {
     constructor(public id: Snowflake, channels: APIChannel[], roles: APIRole[], public name: string, public memberCount: number, token: string) {
         super(token);
         
-        channels.forEach(chan => {
-            this.channels.set(chan.id, new Channel(chan.id, this, chan.name, this._token))
-        })
+        channels.forEach((chan) => {
+            this.channels.set(chan.id, new Channel(chan.id, this, chan.name, this._token));
+        });
 
-        roles.forEach(role => {
+        roles.forEach((role) => {
             this.roles.set(role.id, new Role(role.id, role.name, role.color, role.position, role.hoist, role.permissions));
-        })
+        });
     }
 }
