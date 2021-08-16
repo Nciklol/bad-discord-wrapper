@@ -22,7 +22,7 @@
       "no-trailing-spaces": "off",
       "no-unused-vars": "warn",
       "comma-dangle": "off",
-      "arrow-parens": "warn"
+      "arrow-parens": "off"
     }
     
   }
