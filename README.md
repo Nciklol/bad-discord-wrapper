@@ -21,7 +21,7 @@ This is not meant for production, its simply meant to serve as a way for me to l
 
 ## Contributing
 
-If for some reason you want to expand this, feel free to clone this repo and code your heart out and open a PR.
+Checkout the [Contributing](https://github.com/Nciklol/bad-discord-wrapper/blob/main/CONTRIBUTING.md) file.
 
 ## Support
 
