@@ -77,8 +77,7 @@ export default class WebSocketManager {
 
             if (res.t == DAPI_EVENTS.GUILD_CREATE) {
                 const g: APIGuild = res.d;
-
-                console.log(g.members);
+                
                 this.client.guilds.set(
                     g.id,
                     new Guild(
