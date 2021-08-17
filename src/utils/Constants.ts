@@ -16,6 +16,7 @@ export const DAPI_EVENTS = {
     READY: "READY",
     GUILD_CREATE: "GUILD_CREATE",
     MESSAGE_CREATE: "MESSAGE_CREATE",
+    MESSAGE_UPDATE: "MESSAGE_UPDATE"
 };
 
 export const Colors = {

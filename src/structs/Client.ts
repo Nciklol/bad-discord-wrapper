@@ -4,6 +4,7 @@ import Guild from "./Guild";
 import Collection from "@discordjs/collection";
 import User from "./User";
 import WebSocketManager from "../managers/WebSocketManager";
+import Message from "./Message";
 
 export default class Client extends EventEmitter {
     private _intents: number;
@@ -11,7 +12,7 @@ export default class Client extends EventEmitter {
     public user?: User = null;
     public guilds? = new Collection<Snowflake, Guild>();
     public ws: WebSocketManager = null;
-
+    public messages = new Collection<Snowflake, Collection<Snowflake, Message>>();
 
     constructor(intents: number) {
         super();

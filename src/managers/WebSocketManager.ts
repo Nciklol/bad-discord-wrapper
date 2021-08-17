@@ -4,6 +4,7 @@ import { APIMessage, APIUser, Snowflake, APIGuild } from "discord-api-types";
 import Guild from "../structs/Guild";
 import { OPCodes, DAPI_EVENTS } from "../utils/Constants";
 import Utils from "../utils/Utils";
+import Collection from "@discordjs/collection";
 
 export default class WebSocketManager {
     public ws = new WebSocket("wss://gateway.discord.gg/?v=9&encoding=json");
@@ -32,6 +33,25 @@ export default class WebSocketManager {
             this.seq = res.s;
             this.client.emit("debug", `WS | Recieved ${res.t} event. Event #${this.seq}`);
             this.client.emit("raw", res);
+
+            if (res.t == DAPI_EVENTS.MESSAGE_UPDATE) {
+                const apiMsg: APIMessage = res.d;
+                const channel = this.client.guilds
+                    .get(apiMsg.guild_id)
+                    .channels.get(apiMsg.channel_id);
+                const message = Utils.convertAPIMessage(
+                    apiMsg,
+                    channel,
+                    this.client
+                );
+                
+                const oldMessage = this.client.messages.get(channel.id).get(message.id);
+                if (!oldMessage) this.client.emit("messagePartialUpdate", message);
+                else {
+                    this.client.emit("messageUpdate", oldMessage, message);
+                    this.client.messages.get(channel.id).set(message.id, message);
+                }
+            }
 
             if (res.t == DAPI_EVENTS.READY) {
                 const apiUser: APIUser = res.d.user;
@@ -85,7 +105,19 @@ export default class WebSocketManager {
                     this.client
                 );
 
-                this.client.emit("message", message);
+                if (!this.client.messages.has(channel.id)) {
+                    this.client.messages.set(channel.id, new Collection([[message.id, message]]));
+                } else {
+                    const clientChannel = this.client.messages.get(channel.id);
+
+                    if (clientChannel.size >= 200) {
+                        clientChannel.delete(clientChannel.firstKey());
+                    }
+
+                    clientChannel.set(message.id, message);
+                }
+
+                this.client.emit("messageCreate", message);
             }
         }
 

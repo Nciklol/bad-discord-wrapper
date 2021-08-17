@@ -11,7 +11,7 @@ client.on("ready", () => {
     console.log(client.user.tag);
 });
 
-client.on("message", async (message: Message) => {
+client.on("messageCreate", async (message: Message) => {
     if (message.author.bot) return console.log("This user is a bot! Wow!");
     
     if (message.content.toLowerCase() === "!ping") {
@@ -27,6 +27,10 @@ client.on("message", async (message: Message) => {
             message.channel.send("Yes!");
         } else message.channel.send("No!");
     }
+});
+
+client.on("messageUpdate", (oldMessage: Message, newMessage: Message) => {
+    newMessage.channel.send(`Caught you editing your message! It used to say ${oldMessage.content}`);
 });
 
 client.on("debug", console.log);
