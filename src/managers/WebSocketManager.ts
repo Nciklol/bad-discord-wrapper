@@ -53,6 +53,16 @@ export default class WebSocketManager {
                 }
             }
 
+            if (res.t == DAPI_EVENTS.GUILD_MEMBER_ADD) {
+                this.client.users.set(res.d.user.id, Utils.convertAPIUser(res.d.user));
+                this.client.emit("guildMemberAdd", Utils.convertAPIMember(res.d.user, res.d, this.client.guilds.get(res.d.guild_id), this.client));
+            }
+
+            if (res.t == DAPI_EVENTS.GUILD_MEMBER_REMOVE) {
+                this.client.users.delete(res.d.user.id);
+                this.client.emit("guildMemberRemove", res.d.guild_id, Utils.convertAPIUser(res.d.user));
+            }
+
             if (res.t == DAPI_EVENTS.READY) {
                 const apiUser: APIUser = res.d.user;
                 const user = Utils.convertAPIUser(apiUser);
@@ -68,6 +78,7 @@ export default class WebSocketManager {
             if (res.t == DAPI_EVENTS.GUILD_CREATE) {
                 const g: APIGuild = res.d;
 
+                console.log(g.members);
                 this.client.guilds.set(
                     g.id,
                     new Guild(
@@ -76,6 +87,7 @@ export default class WebSocketManager {
                         g.roles,
                         g.name,
                         g.member_count,
+                        g.members,
                         this.client
                     )
                 );

@@ -4,14 +4,17 @@ import User from "./User";
 import Guild from "./Guild";
 import Role from "./Role";
 import Permissions from "../utils/Permissions";
+import Base from "./Base";
+import Client from "./Client";
 
-export default class GuildMember {
+export default class GuildMember extends Base {
     public id: Snowflake = null;
     public displayName: string = null;
     public roles = new Collection<Snowflake, Role>();
     public permissions: Permissions;
 
-    constructor(public user: User, public nick: string | null, roles: string[], public guild: Guild) {
+    constructor(public user: User, public nick: string | null, roles: string[], public guild: Guild, client: Client) {
+        super(client);
         roles.forEach((id) => {
             const role = guild.roles.get(id);
             if (!role) {

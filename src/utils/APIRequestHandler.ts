@@ -1,4 +1,4 @@
-import { Snowflake, APIMessage } from "discord-api-types";
+import { Snowflake, APIMessage, APIGuildMember } from "discord-api-types";
 import MessageEmbed from "../structs/MessageEmbed";
 import { MessageOptions } from "../typings";
 import Utils from "./Utils";
@@ -50,6 +50,21 @@ export default class APIRequestHandler {
 
         if (res.ok) {
             return true;
+        } else {
+            return console.error("Discord API Error:", await res.json());
+        }
+    }
+
+    public static async listGuildMembers(guildID: Snowflake, token: string, limit?: number): Promise<APIGuildMember[] | void> {
+        const res = await Utils.request(`/guilds/${guildID}/members${limit ? `?limit=${limit}` : ""}`, "GET", {
+            headers: {
+                "Authorization": `Bot ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (res.ok) {
+            return await res.json() as APIGuildMember[];
         } else {
             return console.error("Discord API Error:", await res.json());
         }

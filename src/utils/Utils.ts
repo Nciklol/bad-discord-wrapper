@@ -47,7 +47,7 @@ export default class Utils extends null {
             channel,
             message.content,
             this.convertAPIUser(message.author),
-            this.convertAPIMember(message.author, message.member, channel.guild),
+            this.convertAPIMember(message.author, message.member, channel.guild, client),
             message.timestamp,
             message.edited_timestamp,
             client
@@ -67,14 +67,16 @@ export default class Utils extends null {
     public static convertAPIMember(
         user: User | APIUser,
         member: APIGuildMember,
-        guild: Guild
+        guild: Guild,
+        client: Client
     ): GuildMember {
         return member ?
             new GuildMember(
                 user instanceof User ? user : this.convertAPIUser(user),
                 member.nick || null,
                 member.roles,
-                guild
+                guild,
+                client
             ) :
             null;
     }

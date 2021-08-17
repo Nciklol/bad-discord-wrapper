@@ -13,6 +13,7 @@ export default class Client extends EventEmitter {
     public guilds? = new Collection<Snowflake, Guild>();
     public ws: WebSocketManager = null;
     public messages = new Collection<Snowflake, Collection<Snowflake, Message>>();
+    public users = new Collection<Snowflake, User>();
 
     constructor(intents: number) {
         super();
