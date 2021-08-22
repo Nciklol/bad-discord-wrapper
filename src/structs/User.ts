@@ -1,5 +1,10 @@
 import { Snowflake } from "discord-api-types";
-import { ImageURLOptions } from "../typings";
+
+export interface ImageURLOptions {
+    format?: "webp" | "png" | "jpg" | "jpeg";
+    size?: 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
+    dynamic?: boolean;
+}
 
 export default class User {
     public tag: string;

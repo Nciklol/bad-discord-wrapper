@@ -5,6 +5,15 @@ import Collection from "@discordjs/collection";
 import User from "./User";
 import WebSocketManager from "../managers/WebSocketManager";
 import Message from "./Message";
+import GuildMember from "./GuildMember";
+
+interface ClientEvents {
+    messageCreate: [message: Message];
+    ready: [];
+    messageUpdate: [oldMessage: Message, newMessage: Message];
+    guildMemberAdd: [member: GuildMember];
+    guildMemberRemove: [guildID: Snowflake, user: User];
+}
 
 export default class Client extends EventEmitter {
     private _intents: number;
@@ -14,6 +23,10 @@ export default class Client extends EventEmitter {
     public ws: WebSocketManager = null;
     public messages = new Collection<Snowflake, Collection<Snowflake, Message>>();
     public users = new Collection<Snowflake, User>();
+
+    public on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => Promise<void> | void): this {
+        return super.on(event, listener);
+    }   
 
     constructor(intents: number) {
         super();

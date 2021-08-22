@@ -1,6 +1,6 @@
 import { Snowflake} from "discord-api-types";
 import handler from "../utils/APIRequestHandler";
-import { MessageOptions } from "../typings";
+import { MessageOptions } from "./Message";
 import Utils from "../utils/Utils";
 import Base from "./Base";
 import Guild from "./Guild";

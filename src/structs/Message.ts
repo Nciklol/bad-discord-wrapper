@@ -1,6 +1,5 @@
-import { Snowflake } from "discord-api-types";
+import { Snowflake, APIEmbed } from "discord-api-types";
 import APIRequestHandler from "../utils/APIRequestHandler";
-import { MessageOptions } from "../typings";
 import Utils from "../utils/Utils";
 import Base from "./Base";
 import Channel from "./Channel";
@@ -9,6 +8,17 @@ import GuildMember from "./GuildMember";
 import MessageEmbed from "./MessageEmbed";
 import User from "./User";
 import Client from "./Client";
+
+export interface ImageURLOptions {
+    format?: "webp" | "png" | "jpg" | "jpeg";
+    size?: 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
+    dynamic?: boolean;
+}
+
+export interface MessageOptions {
+    content?: string;
+    embeds?: MessageEmbed[] | APIEmbed[];
+}
 
 export default class Message extends Base {
     public createdTimestamp: number;

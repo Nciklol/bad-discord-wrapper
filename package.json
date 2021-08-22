@@ -2,7 +2,10 @@
   "name": "bad-discord-wrapper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "watch": "cd ./src && tsc -w",
     "lint": "eslint . --ext .ts"
@@ -10,7 +13,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "types": "./typings",
   "dependencies": {
     "@discordjs/collection": "^0.2.1",
     "discord-api-types": "^0.22.0",

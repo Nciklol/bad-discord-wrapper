@@ -44,7 +44,6 @@ export default class WebSocketManager {
                     channel,
                     this.client
                 );
-                
                 const oldMessage = this.client.messages.get(channel.id).get(message.id);
                 if (!oldMessage) this.client.emit("messagePartialUpdate", message);
                 else {

@@ -1,6 +1,6 @@
 import { Snowflake, APIMessage, APIGuildMember } from "discord-api-types";
 import MessageEmbed from "../structs/MessageEmbed";
-import { MessageOptions } from "../typings";
+import { MessageOptions } from "../structs/Message";
 import Utils from "./Utils";
 
 export default class APIRequestHandler {

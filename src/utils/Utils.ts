@@ -1,5 +1,5 @@
 import MessageEmbed from "../structs/MessageEmbed";
-import { MessageOptions } from "../typings";
+import { MessageOptions } from "../structs/Message";
 import { APIMessage, APIUser, APIGuildMember } from "discord-api-types";
 import fetch, { Response, BodyInit, HeadersInit } from "node-fetch";
 import Message from "../structs/Message";
