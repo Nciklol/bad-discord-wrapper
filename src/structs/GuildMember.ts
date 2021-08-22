@@ -36,4 +36,12 @@ export default class GuildMember extends Base {
 
         this.permissions = new Permissions(BigInt(permissions));
     }
+    
+    public toString(): string {
+        return `<@${this.id}>`;
+    }
+
+    public valueOf(): Snowflake {
+        return this.id;
+    }
 }

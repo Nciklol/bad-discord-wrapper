@@ -1,7 +1,7 @@
 {
   "name": "bad-discord-wrapper",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
+  "description": "Wrapper for the Discord API",
   "main": "./src/index.js",
   "types": "./src/index.js",
   "bugs": "https://github.com/Nciklol/bad-discord-wrapper/issues",

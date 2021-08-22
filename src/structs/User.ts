@@ -25,4 +25,12 @@ export default class User {
         return this._avatarHash ? `https://cdn.discordapp.com/avatars/${this.id}/${this._avatarHash}.${type || "webp"}${size ? `?size=${size}` : ""}` : 
             `https://cdn.discordapp.com/embed/avatars/${Number(this.discriminator) % 5}.${type || "webp"}${size ? `?size=${size}` : ""}`;
     }
+
+    public toString(): string {
+        return `<@${this.id}>`;
+    }
+
+    public valueOf(): Snowflake {
+        return this.id;
+    }
 }
