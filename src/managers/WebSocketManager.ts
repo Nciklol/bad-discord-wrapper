@@ -34,7 +34,41 @@ export default class WebSocketManager {
             this.client.emit("debug", `WS | Recieved ${res.t} event. Event #${this.seq}`);
             this.client.emit("raw", res);
 
-            if (res.t == DAPI_EVENTS.MESSAGE_UPDATE) {
+            if (res.t == DAPI_EVENTS.READY) {
+                const apiUser: APIUser = res.d.user;
+                const user = Utils.convertAPIUser(apiUser);
+                this.client.user = user;
+
+                this.readyGuilds = res.d.guilds.map((g) => g.id);
+                this.client.emit(
+                    "debug",
+                    `WS | Got ${this.readyGuilds.length} guilds from discord.`
+                );
+            } else if (res.t == DAPI_EVENTS.MESSAGE_CREATE) {
+                const apiMsg: APIMessage = res.d;
+                const channel = this.client.guilds
+                    .get(apiMsg.guild_id)
+                    .channels.get(apiMsg.channel_id);
+                const message = Utils.convertAPIMessage(
+                    apiMsg,
+                    channel,
+                    this.client
+                );
+
+                if (!this.client.messages.has(channel.id)) {
+                    this.client.messages.set(channel.id, new Collection([[message.id, message]]));
+                } else {
+                    const clientChannel = this.client.messages.get(channel.id);
+
+                    if (clientChannel.size >= 200) {
+                        clientChannel.delete(clientChannel.firstKey());
+                    }
+
+                    clientChannel.set(message.id, message);
+                }
+
+                this.client.emit("messageCreate", message);
+            } else if (res.t == DAPI_EVENTS.MESSAGE_UPDATE) {
                 const apiMsg: APIMessage = res.d;
                 const channel = this.client.guilds
                     .get(apiMsg.guild_id)
@@ -50,39 +84,19 @@ export default class WebSocketManager {
                     this.client.emit("messageUpdate", oldMessage, message);
                     this.client.messages.get(channel.id).set(message.id, message);
                 }
-            }
-
-            if (res.t == DAPI_EVENTS.GUILD_MEMBER_UPDATE) {
+            } else if (res.t == DAPI_EVENTS.GUILD_MEMBER_UPDATE) {
                 const newMember = Utils.convertAPIMember(res.d.user, res.d, this.client.guilds.get(res.d.guild_id), this.client);
                 const oldMember = Object.freeze(this.client.guilds.get(newMember.guild.id).members.cache.get(newMember.id));
                 
                 this.client.guilds.get(newMember.guild.id).members.cache.set(newMember.id, newMember);
                 this.client.emit("guildMemberUpdate", oldMember, newMember);
-            }
-
-            if (res.t == DAPI_EVENTS.GUILD_MEMBER_ADD) {
+            } else if (res.t == DAPI_EVENTS.GUILD_MEMBER_ADD) {
                 this.client.users.set(res.d.user.id, Utils.convertAPIUser(res.d.user));
                 this.client.emit("guildMemberAdd", Utils.convertAPIMember(res.d.user, res.d, this.client.guilds.get(res.d.guild_id), this.client));
-            }
-
-            if (res.t == DAPI_EVENTS.GUILD_MEMBER_REMOVE) {
+            } else if (res.t == DAPI_EVENTS.GUILD_MEMBER_REMOVE) {
                 this.client.users.delete(res.d.user.id);
                 this.client.emit("guildMemberRemove", res.d.guild_id, Utils.convertAPIUser(res.d.user));
-            }
-
-            if (res.t == DAPI_EVENTS.READY) {
-                const apiUser: APIUser = res.d.user;
-                const user = Utils.convertAPIUser(apiUser);
-                this.client.user = user;
-
-                this.readyGuilds = res.d.guilds.map((g) => g.id);
-                this.client.emit(
-                    "debug",
-                    `WS | Got ${this.readyGuilds.length} guilds from discord.`
-                );
-            }
-
-            if (res.t == DAPI_EVENTS.GUILD_CREATE) {
+            } else if (res.t == DAPI_EVENTS.GUILD_CREATE) {
                 const g: APIGuild = res.d;
                 
                 this.client.guilds.set(
@@ -110,32 +124,6 @@ export default class WebSocketManager {
                         }
                     }
                 }
-            }
-
-            if (res.t == DAPI_EVENTS.MESSAGE_CREATE) {
-                const apiMsg: APIMessage = res.d;
-                const channel = this.client.guilds
-                    .get(apiMsg.guild_id)
-                    .channels.get(apiMsg.channel_id);
-                const message = Utils.convertAPIMessage(
-                    apiMsg,
-                    channel,
-                    this.client
-                );
-
-                if (!this.client.messages.has(channel.id)) {
-                    this.client.messages.set(channel.id, new Collection([[message.id, message]]));
-                } else {
-                    const clientChannel = this.client.messages.get(channel.id);
-
-                    if (clientChannel.size >= 200) {
-                        clientChannel.delete(clientChannel.firstKey());
-                    }
-
-                    clientChannel.set(message.id, message);
-                }
-
-                this.client.emit("messageCreate", message);
             }
         }
 
