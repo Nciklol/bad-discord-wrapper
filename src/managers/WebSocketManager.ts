@@ -136,8 +136,8 @@ export default class WebSocketManager {
                     intents: this.intents,
                     properties: {
                         $os: "linux",
-                        $browser: "my_library",
-                        $device: "my_library",
+                        $browser: "bad-discord-wrapper",
+                        $device: "bad-discord-wrapper",
                     },
                 },
             };
