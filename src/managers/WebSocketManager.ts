@@ -52,6 +52,14 @@ export default class WebSocketManager {
                 }
             }
 
+            if (res.t == DAPI_EVENTS.GUILD_MEMBER_UPDATE) {
+                const newMember = Utils.convertAPIMember(res.d.user, res.d, this.client.guilds.get(res.d.guild_id), this.client);
+                const oldMember = Object.freeze(this.client.guilds.get(newMember.guild.id).members.cache.get(newMember.id));
+                
+                this.client.guilds.get(newMember.guild.id).members.cache.set(newMember.id, newMember);
+                this.client.emit("guildMemberUpdate", oldMember, newMember);
+            }
+
             if (res.t == DAPI_EVENTS.GUILD_MEMBER_ADD) {
                 this.client.users.set(res.d.user.id, Utils.convertAPIUser(res.d.user));
                 this.client.emit("guildMemberAdd", Utils.convertAPIMember(res.d.user, res.d, this.client.guilds.get(res.d.guild_id), this.client));

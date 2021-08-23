@@ -13,7 +13,8 @@ interface ClientEvents {
     messageUpdate: [oldMessage: Message, newMessage: Message];
     guildMemberAdd: [member: GuildMember];
     guildMemberRemove: [guildID: Snowflake, user: User];
-    debug: [str: string]
+    debug: [str: string];
+    guildMemberUpdate: [oldMember: GuildMember, newMember: GuildMember];
 }
 
 export default class Client extends EventEmitter {
