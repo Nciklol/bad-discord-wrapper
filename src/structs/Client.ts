@@ -1,5 +1,5 @@
 import { Snowflake } from "discord-api-types";
-import { EventEmitter } from "stream";
+import { EventEmitter } from "events";
 import Guild from "./Guild";
 import Collection from "@discordjs/collection";
 import User from "./User";
@@ -29,9 +29,9 @@ export default class Client extends EventEmitter {
         return super.on(event, listener);
     }   
 
-    constructor(intents: number) {
+    constructor(intents: number[]) {
         super();
-        this._intents = intents;
+        typeof intents === "number" ? this._intents = intents : this._intents = intents.reduce((x, y) => x += y);
     }
 
     public login(token?: string): void {
