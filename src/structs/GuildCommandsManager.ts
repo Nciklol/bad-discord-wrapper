@@ -1,6 +1,6 @@
 import ApplicationCommand, { ApplicationCommandOptions } from "./ApplicationCommand";
 import Collection from "@discordjs/collection";
-import { Snowflake, APIApplicationCommand } from "discord-api-types";
+import { Snowflake } from "discord-api-types";
 import APIRequestHandler from "../utils/APIRequestHandler";
 import Client from "./Client";
 
@@ -21,12 +21,10 @@ export default class GuildCommandsManager extends Collection<Snowflake, Applicat
         Object.defineProperty(this, 'client', { value: client });
     }
 
-    async fetchCommands(): Promise<Collection<string, ApplicationCommand>> {
+    async fetch(): Promise<Collection<string, ApplicationCommand>> {
         const cmds = await APIRequestHandler.fetchGuildCommands(this.client.user.id, this._id, this.client.ws.token);
 
         if (!cmds) return null;
-        
-        console.log(cmds);
 
         for (const cmd of cmds) {
             const opts: ApplicationCommandOptions[] = [];

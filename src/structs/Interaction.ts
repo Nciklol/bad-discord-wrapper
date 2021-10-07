@@ -1,7 +1,7 @@
 import Guild from "./Guild";
 import GuildMember from "./GuildMember";
 import User from "./User";
-import {APIApplicationCommandInteractionData, APIMessageComponentInteractionData, Snowflake } from "discord-api-types";
+import { APIApplicationCommandInteractionData, APIMessageComponentInteractionData, Snowflake, APIApplicationCommandInteractionDataOption } from "discord-api-types";
 import APIRequestHandler from "../utils/APIRequestHandler";
 import Client from "./Client";
 import Base from "./Base";
@@ -10,6 +10,7 @@ import MessageEmbed from "./MessageEmbed";
 
 export default class Interaction extends Base {
     public name: string;
+    public options: APIApplicationCommandInteractionDataOption[];
     private _id: string;
     private _responded: boolean;
 
@@ -19,6 +20,7 @@ export default class Interaction extends Base {
         const d = data as APIApplicationCommandInteractionData;
         this.name = d.name;
         this._id = id;
+        this.options = d.options || [];
     }
 
     public async reply(message: string | MessageEmbed | MessageOptions): Promise<void> {
