@@ -6,6 +6,8 @@ import User from "./User";
 import WebSocketManager from "../managers/WebSocketManager";
 import Message from "./Message";
 import GuildMember from "./GuildMember";
+import ClientApplication from "./ClientApplication";
+import Interaction from "./Interaction";
 
 interface ClientEvents {
     messageCreate: [message: Message];
@@ -15,6 +17,8 @@ interface ClientEvents {
     guildMemberRemove: [guildID: Snowflake, user: User];
     debug: [str: string];
     guildMemberUpdate: [oldMember: GuildMember, newMember: GuildMember];
+    interactionCreate: [interaction: Interaction],
+    raw: [JSON]
 }
 
 export default class Client extends EventEmitter {
@@ -24,15 +28,16 @@ export default class Client extends EventEmitter {
     public guilds? = new Collection<Snowflake, Guild>();
     public ws: WebSocketManager = null;
     public messages = new Collection<Snowflake, Collection<Snowflake, Message>>();
+    public application: ClientApplication = null;
     public users = new Collection<Snowflake, User>();
 
     public on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => Promise<void> | void): this {
         return super.on(event, listener);
     }   
 
-    constructor(intents: number[]) {
+    constructor(intents: number[] | number) {
         super();
-        typeof intents === "number" ? this._intents = intents : this._intents = intents.reduce((x, y) => x += y);
+        typeof intents === "number" ? this._intents = intents : this._intents = intents.reduce((x, y) => x |= y);
     }
 
     public login(token?: string): void {

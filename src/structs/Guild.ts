@@ -5,11 +5,13 @@ import Base from "./Base";
 import Role from "./Role";
 import Client from "./Client";
 import GuildMemberManager from "../managers/GuildMemberManager";
+import GuildCommandsManager from "./GuildCommandsManager";
 
 export default class Guild extends Base {
     public channels = new Collection<Snowflake, Channel>();
     public roles = new Collection<Snowflake, Role>();
     public members: GuildMemberManager;
+    public commands: GuildCommandsManager;
 
     constructor(public id: Snowflake, channels: APIChannel[], roles: APIRole[], public name: string, 
         public memberCount: number, members: APIGuildMember[], client: Client) {
@@ -24,5 +26,6 @@ export default class Guild extends Base {
         });
 
         this.members = new GuildMemberManager(this, this.client, members);
+        this.commands = new GuildCommandsManager(this.id, this.client);
     }
 }

@@ -1,6 +1,6 @@
 import MessageEmbed from "../structs/MessageEmbed";
 import { MessageOptions } from "../structs/Message";
-import { APIMessage, APIUser, APIGuildMember } from "discord-api-types";
+import { APIMessage, APIUser, APIGuildMember, APIInteraction } from "discord-api-types";
 import fetch, { Response, BodyInit, HeadersInit } from "node-fetch";
 import Message from "../structs/Message";
 import Guild from "../structs/Guild";
@@ -8,9 +8,10 @@ import Channel from "../structs/Channel";
 import User from "../structs/User";
 import GuildMember from "../structs/GuildMember";
 import Client from "../structs/Client";
+import Interaction from "../structs/Interaction";
 
 export default class Utils extends null {
-    public static async request(endpoint: string, method: string, { body, headers }: { body?: BodyInit, headers: HeadersInit }): Promise<Response> {
+    public static async request(endpoint: string, method: string, { body, headers }: { body?: BodyInit, headers?: HeadersInit }): Promise<Response> {
         return await fetch(`https://discord.com/api/v9${endpoint}`, {
             method, 
             body,
@@ -79,5 +80,15 @@ export default class Utils extends null {
                 client
             ) :
             null;
+    }
+
+    public static convertAPIInteraction(interaction: APIInteraction, client: Client): Interaction {
+        if (interaction.member) {
+            const guild = client.guilds.get(interaction.guild_id);
+            const member = Utils.convertAPIMember(interaction.member.user, interaction.member, guild, client);
+            return new Interaction(interaction.token, member.user, interaction.id, interaction.data, client, member, guild);
+        } else {
+            return new Interaction(interaction.token, this.convertAPIUser(interaction.user), interaction.id, interaction.data, null, null);
+        }
     }
 }

@@ -34,6 +34,11 @@ export default class MessageEmbed {
 
     public setURL(url: string): MessageEmbed {
         this._json['url'] = url;
+        return this;
+    }
+
+    public setImage(url:string): MessageEmbed {
+        this._json['image'] = {url};
 
         return this;
     }

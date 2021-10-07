@@ -9,5 +9,6 @@ import Role from "./structs/Role";
 import User from "./structs/User";
 import Permissions from "./utils/Permissions";
 import Intents from "./utils/Intents";
+import ApplicationCommand from "./structs/ApplicationCommand";
 
-export {Client, MessageEmbed, Message, Channel, Base, Guild, GuildMember, Role, User, Permissions, Intents};
+export {Client, MessageEmbed, Message, Channel, Base, Guild, GuildMember, Role, User, Permissions, Intents, ApplicationCommand };
