@@ -12,12 +12,13 @@ This is not meant for production, its simply meant to serve as a way for me to l
 ## Features
 
 - Allows you to send, edit, and react to messages via embed**s** and strings.
+- Allows you to create slashies
+- Allows you to interact with slashies
 
   
 
 ## Example
 
-  
 
 TypeScript:
 
@@ -25,18 +26,24 @@ TypeScript:
 
 ```ts
 
-import  {  Client  }  from  "bad-discord-wrapper";
+import  { Client }  from  "bad-discord-wrapper";
 
   
 
-const  client  =  new  Client(515);  // Intents are only provided via number currently. see https://ziad87.net/intents/
+const client =  new Client([Intents.FlAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]);  // Intents are provided via direct number or by array. Get the numbers from `Intents.FLAGS`
 
   
 
 client.on("ready", () =>  {
+    console.log("logged in")
+})
 
-console.log("logged in")
-
+client.on("interactionCreate", i => { // Types are already assigned.
+    if (i.isCommand()) {
+        if (i.name === "ping") {
+            i.reply("pong!");
+        }
+    }
 })
 
   
@@ -57,25 +64,24 @@ const { Client } =  require("bad-discord-wrapper");
 
   
 
-const  client  =  new  Client(515);  // Intents are only provided via number currently. see https://ziad87.net/intents/
+const client =  new Client([Intents.FlAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]);  // Intents are provided via direct number or by array. Get the numbers from `Intents.FLAGS`
 
-  
 
 client.on("ready", () =>  {
-
-console.log("logged in")
-
+    console.log("logged in")
 })
 
-  
+client.on("interactionCreate", i => { // Types are already assigned.
+    if (i.isCommand()) {
+        if (i.name === "ping") {
+            i.reply("pong!");
+        }
+    }
+})
 
 client.login();  // Log in with token or leave it empty and it will check for process.env.DISCORD_TOKEN
 
 ```
-
-*Currently, this package does not natively support JSDoc. Thus typings will be slim to non for JS. Fully supported for TS though.*
-
-  
 
 ## Events
 
@@ -85,7 +91,7 @@ client.login();  // Log in with token or leave it empty and it will check for pr
 
 -  `messageCreate` - Fired when discord sends a message.
 
--  `debug` - Sends WS information to the console to help you easily debug some of the many issues that I probably have.
+-  `debug` - Sends WS information to the console.
 
 -  `guildMemberAdd` - Sends Guild Member Add events
 
@@ -93,7 +99,9 @@ client.login();  // Log in with token or leave it empty and it will check for pr
 
 -  `messageUpdate` - Sends Message Update events (Caches 200 messages per channel.)
 
-  
+-  `messagePartialUpdate` - In the event a message *is not* cached, this will only send the newMessage.
+
+-  `interactionCreate` - Sends Interactions (Currently only supporting Command Interactions)
 
 ## What not to expect
 
@@ -120,4 +128,4 @@ Checkout the [Contributing](https://github.com/Nciklol/bad-discord-wrapper/blob/
 
   
 
-[YBot Support Server](https://discord.gg/STe9YQgtz2) (I'm not making a discord dedicated to this -- feel free to join my support server for another project and talk about it in the #bad-discord-wrapper channel.)
+[Support Server](https://discord.gg/STe9YQgtz2) *See the bad-discord-wrapper channel*
