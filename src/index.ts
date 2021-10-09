@@ -10,5 +10,7 @@ import User from "./structs/User";
 import Permissions from "./utils/Permissions";
 import Intents from "./utils/Intents";
 import ApplicationCommand from "./structs/ApplicationCommand";
+import CommandInteraction from "./structs/CommandInteraction";
+import Interaction from "./structs/Interaction";
 
-export {Client, MessageEmbed, Message, Channel, Base, Guild, GuildMember, Role, User, Permissions, Intents, ApplicationCommand };
+export { Client, MessageEmbed, Message, Channel, Base, Guild, GuildMember, Role, User, Permissions, Intents, ApplicationCommand, CommandInteraction, Interaction };

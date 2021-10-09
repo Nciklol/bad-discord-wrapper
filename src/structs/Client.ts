@@ -13,6 +13,7 @@ interface ClientEvents {
     messageCreate: [message: Message];
     ready: [];
     messageUpdate: [oldMessage: Message, newMessage: Message];
+    messageUpdatePartial: [newMessage: Message];
     guildMemberAdd: [member: GuildMember];
     guildMemberRemove: [guildID: Snowflake, user: User];
     debug: [str: string];
