@@ -1,10 +1,11 @@
 import Client from "../structs/Client";
 import WebSocket from "ws";
-import { APIMessage, APIUser, Snowflake, APIGuild } from "discord-api-types";
+import { APIMessage, APIUser, Snowflake, APIGuild, APIInteraction } from "discord-api-types";
 import Guild from "../structs/Guild";
 import { OPCodes, DAPI_EVENTS } from "../utils/Constants";
 import Utils from "../utils/Utils";
 import Collection from "@discordjs/collection";
+import ClientApplication from "../structs/ClientApplication";
 
 export default class WebSocketManager {
     public ws = new WebSocket("wss://gateway.discord.gg/?v=9&encoding=json");
@@ -38,6 +39,7 @@ export default class WebSocketManager {
                 const apiUser: APIUser = res.d.user;
                 const user = Utils.convertAPIUser(apiUser);
                 this.client.user = user;
+                this.client.application = new ClientApplication(user.id, this.client);
 
                 this.readyGuilds = res.d.guilds.map((g) => g.id);
                 this.client.emit(
@@ -123,7 +125,10 @@ export default class WebSocketManager {
                             this.client.emit("ready");
                         }
                     }
-                }
+                } 
+            } else if (res.t == DAPI_EVENTS.INTERACTION_CREATE) {
+                const interaction: APIInteraction = res.d;
+                this.client.emit("interactionCreate", Utils.convertAPIInteraction(interaction, this.client));
             }
         }
 
