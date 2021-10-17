@@ -8,6 +8,7 @@ import Message from "./Message";
 import GuildMember from "./GuildMember";
 import ClientApplication from "./ClientApplication";
 import Interaction from "./Interaction";
+import Reaction from "./Reaction";
 
 interface ClientEvents {
     messageCreate: [message: Message];
@@ -18,8 +19,9 @@ interface ClientEvents {
     guildMemberRemove: [guildID: Snowflake, user: User];
     debug: [str: string];
     guildMemberUpdate: [oldMember: GuildMember, newMember: GuildMember];
-    interactionCreate: [interaction: Interaction],
-    raw: [JSON]
+    interactionCreate: [interaction: Interaction];
+    messageReactionAdd: [reaction: Reaction];
+    raw: [JSON];
 }
 
 export default class Client extends EventEmitter {

@@ -1,6 +1,6 @@
 import Client from "../structs/Client";
 import WebSocket from "ws";
-import { APIMessage, APIUser, Snowflake, APIGuild, APIInteraction } from "discord-api-types";
+import { APIMessage, APIUser, Snowflake, APIGuild, APIInteraction, GatewayMessageReactionAddDispatch } from "discord-api-types";
 import Guild from "../structs/Guild";
 import { OPCodes, DAPI_EVENTS } from "../utils/Constants";
 import Utils from "../utils/Utils";
@@ -129,6 +129,13 @@ export default class WebSocketManager {
             } else if (res.t == DAPI_EVENTS.INTERACTION_CREATE) {
                 const interaction: APIInteraction = res.d;
                 this.client.emit("interactionCreate", Utils.convertAPIInteraction(interaction, this.client));
+            } else if (res.t == DAPI_EVENTS.MESSAGE_REACTION_ADD) {
+                const data = res as GatewayMessageReactionAddDispatch;
+
+                if (!this.client.messages.get(data.d.channel_id).get(data.d.message_id)) return;
+                const reaction = Utils.convertAPIReaction(data.d, this.client);
+
+                this.client.emit("messageReactionAdd", reaction);
             }
         }
 

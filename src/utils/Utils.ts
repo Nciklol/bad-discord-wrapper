@@ -1,6 +1,6 @@
 import MessageEmbed from "../structs/MessageEmbed";
 import { MessageOptions } from "../structs/Message";
-import { APIMessage, APIUser, APIGuildMember, APIInteraction, InteractionType } from "discord-api-types";
+import { APIMessage, APIUser, APIGuildMember, APIInteraction, InteractionType, APIEmoji } from "discord-api-types";
 import fetch, { Response, BodyInit, HeadersInit } from "node-fetch";
 import Message from "../structs/Message";
 import Guild from "../structs/Guild";
@@ -10,6 +10,21 @@ import GuildMember from "../structs/GuildMember";
 import Client from "../structs/Client";
 import Interaction from "../structs/Interaction";
 import CommandInteraction from "../structs/CommandInteraction";
+import Reaction from "../structs/Reaction";
+
+
+interface MessageReactionAdd {
+    // eslint-disable-next-line camelcase  -- complaining about api docs
+    user_id: string;
+    // eslint-disable-next-line camelcase  -- complaining about api docs
+    channel_id: string;
+    // eslint-disable-next-line camelcase  -- complaining about api docs
+    message_id: string;
+    // eslint-disable-next-line camelcase  -- complaining about api docs
+    guild_id?: string;
+    member?: APIGuildMember;
+    emoji: APIEmoji;
+}
 
 export default class Utils extends null {
     public static async request(endpoint: string, method: string, { body, headers }: { body?: BodyInit, headers?: HeadersInit }): Promise<Response> {
@@ -94,5 +109,14 @@ export default class Utils extends null {
         } else {
             return new Interaction(client, interaction.type);
         }
+    }
+
+    public static convertAPIReaction(reaction: MessageReactionAdd, client: Client): Reaction {
+        const user = this.convertAPIUser(reaction.member.user);
+        const guild = client.guilds.get(reaction.guild_id) || null;
+        const member = reaction.member ? this.convertAPIMember(user, reaction.member, guild, client) : null;
+
+        return new Reaction(guild?.channels.get(reaction.channel_id), 
+            reaction.emoji.id, user, guild, member, client.messages.get(reaction.channel_id).get(reaction.message_id));
     }
 }

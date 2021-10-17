@@ -16,6 +16,8 @@ export default class APIRequestHandler {
             }
         });
 
+        console.log(res.headers);
+
         if (res.ok) {
             return (await res.json()) as APIMessage;
         } else {
